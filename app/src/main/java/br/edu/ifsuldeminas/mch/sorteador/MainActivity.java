@@ -12,11 +12,24 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    private int contador = 0;
+    int contador = 0;
+    int valorMaximo = 0;
+    int valorMinimo = 0;
+    Calendar calendar = Calendar.getInstance();
+    Date date = calendar.getTime();
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+
+    String dataFormatada = dateFormat.format(date);
+    String horaFormatada = timeFormat.format(date);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, InformacoesAdicionaisActivity.class);
                 intent.putExtra("contador", contador);
+                intent.putExtra("valorMaximo", valorMaximo);
+                intent.putExtra("valorMinimo", valorMinimo);
+                intent.putExtra("data", dataFormatada);
+                intent.putExtra("hora", horaFormatada);
                 startActivity(intent);
             }
         });
@@ -43,16 +60,21 @@ public class MainActivity extends AppCompatActivity {
         textInputEditTextValorMinimo = findViewById(R.id.textInputEditTextValorMinimo);
         textInputEditTextValorMaximo = findViewById(R.id.textInputEditTextValorMaximo);
 
-        int valorMaximo = Integer.parseInt(textInputEditTextValorMaximo.getText().toString());
-        int valorMinimo = Integer.parseInt(textInputEditTextValorMinimo.getText().toString());
+        valorMaximo = Integer.parseInt(textInputEditTextValorMaximo.getText().toString());
+        valorMinimo = Integer.parseInt(textInputEditTextValorMinimo.getText().toString());
 
 
         Random random = new Random();
 
         int numero = random.nextInt(valorMaximo - valorMinimo + 1) + valorMinimo;
 
-        textViewValorSorteado.setText("Número sorteado foi: " + numero);
-        Toast.makeText(MainActivity.this, "Seu número foi sorteado!", Toast.LENGTH_SHORT).show();
-        contador++;
+
+        if(textInputEditTextValorMaximo.equals("") || textInputEditTextValorMinimo.equals("")) {
+            Toast.makeText(MainActivity.this, "Preencha os campos acima!", Toast.LENGTH_SHORT).show();
+        } else {
+            textViewValorSorteado.setText("Número sorteado foi: " + numero + "Contado: " + contador);
+            contador++;
+        }
+
     }
 }
