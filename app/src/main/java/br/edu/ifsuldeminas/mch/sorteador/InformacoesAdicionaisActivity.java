@@ -57,7 +57,6 @@ public class InformacoesAdicionaisActivity extends AppCompatActivity {
         if (intent.hasExtra("data") && intent.hasExtra("hora")) {
             String data = intent.getStringExtra("data");
             String hora = intent.getStringExtra("hora");
-
             // Exibir a data e a hora nos TextViews
             textViewData.setText("Data: " + data);
             textViewHora.setText("Hora: " + hora);
