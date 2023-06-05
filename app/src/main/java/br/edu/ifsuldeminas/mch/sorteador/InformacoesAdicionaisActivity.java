@@ -1,9 +1,12 @@
 package br.edu.ifsuldeminas.mch.sorteador;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,25 +16,40 @@ public class InformacoesAdicionaisActivity extends AppCompatActivity {
     private TextView textViewQtd;
     private TextView textViewValores;
     private TextView textViewData;
-    private TextView textViewHora;
+    private int valorMaximo;
+    private int valorMinimo;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_informacoes_adicionais);
+        Switch switchMostra = findViewById(R.id.switchMostra);
 
         textViewQtd = findViewById(R.id.textViewQtd);
         textViewValores = findViewById(R.id.textViewValores);
+        textViewData = findViewById(R.id.textViewData);
 
-        Button buttonAbrirInformacoes = findViewById(R.id.buttonAbrirInformacoes);
-        buttonAbrirInformacoes.setOnClickListener(new View.OnClickListener() {
+        // Carregar os valores salvos
+        SharedPreferences sharedPreferences = getSharedPreferences("SorteadorPrefs", MODE_PRIVATE);
+        valorMaximo = sharedPreferences.getInt("valorMaximo", 0);
+        valorMinimo = sharedPreferences.getInt("valorMinimo", 0);
+
+        // Atualizar os campos de exibição com os valores carregados
+        //textViewValores.setText("Sorteio entre: " + valorMinimo + " e " + valorMaximo);
+
+        switchMostra.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                qtdSorteio();
-                valoresSorteio();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // Executar ações com base no estado do Switch
+                if (isChecked) {
+                    // O Switch está ativado
+                    qtdSorteio();
+                    valoresSorteio();
+                    dataHora();
+                }
             }
         });
-
 
     }
 
@@ -58,8 +76,7 @@ public class InformacoesAdicionaisActivity extends AppCompatActivity {
             String data = intent.getStringExtra("data");
             String hora = intent.getStringExtra("hora");
             // Exibir a data e a hora nos TextViews
-            textViewData.setText("Data: " + data);
-            textViewHora.setText("Hora: " + hora);
+            textViewData.setText("O sorteio foi realizado em: " + data + " ás: " + hora);
         }
     }
 }
